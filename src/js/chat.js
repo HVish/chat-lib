@@ -59,16 +59,8 @@ class Message {
             throw (new InvalidParameter(`date`, `It should of date type`));
         }
 
-        switch (isLeft) {
-            case MESSAGE.POSITION.LEFT:
-                this.isLeft = isLeft;
-                this.msgClass = `message-wrapper left`;
-                break;
-            case MESSAGE.POSITION.RIGHT:
-            default:
-                this.isLeft = isLeft;
-                this.msgClass = `message-wrapper right`;
-        }
+        this.isLeft = (isLeft == MESSAGE.POSITION.LEFT ? isLeft : MESSAGE.POSITION.RIGHT);
+        this.msgClass = `message-wrapper`;
 
         switch (status) {
             case MESSAGE.STATUS.NONE:
@@ -109,6 +101,44 @@ class Message {
     }
 
 };
+class MsgGroup {
+    /**
+     * @param  {Array} messages  Array of messages of Message type
+     * @return {MsgGroup}        A msgroup object
+     */
+    constructor(messages) {
+        let thumb = document.createElement(`div`);
+        thumb.className = `message-thumbnail`;
+
+        this.dom = document.createElement(`div`);
+        this.dom.className = `message-group`;
+        this.dom.appendChild(thumb);
+
+        this.messageList = document.createElement(`div`);
+        this.messageList.className = `message-list`;
+        this.dom.appendChild(this.messageList);
+
+        if (messages && messages instanceof Array) {
+            messages.map(message => {
+                this.addMessage(message);
+            });
+        } else {
+            throw new InvalidParameter(`messages`, `It should be of type Array`);
+        }
+    }
+
+    addMessage(message) {
+        if (message instanceof Message) {
+            this.dom.getElementsByClassName('message-list')[0].appendChild(message.html);
+        } else {
+            throw new InvalidParameter(`message`, `It should be of type Message`);
+        }
+    }
+
+    get html() {
+        return this.dom;
+    }
+}
 class ChatBox {
     /**
      * @param  {string}  id        unique identifier for chatbox
@@ -119,7 +149,7 @@ class ChatBox {
      */
     constructor(id, title, messages, isEnabled) {
 
-        this.isEnabled = (isEnabled == true) ? true : false;
+        this.isEnabled = (isEnabled == false) ? false : true;
 
         if (id) {
             this.id = id;
@@ -178,7 +208,7 @@ class ChatBox {
 
     createChatFooter() {
 
-        if (this.isEnabled === true) {
+        if (this.isEnabled == true) {
             let dom = document.createElement('div');
             let editable = `contenteditable="true" placeholder="Type a message..."`;
             let input = `<div class="chat-input" ${editable}></div>`;
@@ -193,7 +223,6 @@ class ChatBox {
 
     appendMsg(message) {
         if (message instanceof Message) {
-            // append message logic
             console.log(message.html);
         } else {
             throw new InvalidParameter(`messages[i]`, `It should be of type Message`);
@@ -202,5 +231,22 @@ class ChatBox {
 
     get html() {
         return this.dom;
+    }
+
+    createChatWrapper() {
+
+        let chatWrapper = document.getElementById(`chat-box-wrapper`);
+        if (!chatWrapper) {
+            let wrapper = document.createElement(`div`);
+            wrapper.setAttribute(`id`, `chat-box-wrapper`);
+            document.getElementsByTagName(`body`)[0].appendChild(wrapper);
+            return wrapper;
+        }
+        return chatWrapper;
+
+    }
+
+    show() {
+        this.createChatWrapper().appendChild(this.dom);
     }
 }

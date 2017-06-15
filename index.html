@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Chat</title>
-        <link rel="stylesheet" href="./dist/css/chat.css">
-    </head>
-    <body>
-        <script src="./dist/js/chat.js" charset="utf-8"></script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <title>Chat</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/chat.css">
+</head>
+
+<body>
+    <script src="./dist/js/chat.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        var chat1 = new ChatBox(1, "Vishnu Singh");
+        var chat2 = new ChatBox(2, "A very large name which will hidden");
+        chat1.show();
+        chat2.show();
+    </script>
+</body>
+
 </html>
